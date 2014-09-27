@@ -1,0 +1,37 @@
+{
+  "name": "ng-cache-loader",
+  "version": "0.0.1",
+  "description": "Puts HTML partials in the Angular's $templateCache.",
+  "main": "index.js",
+  "scripts": {
+    "test": "./node_modules/webpack/bin/webpack.js --config=test/webpack.config.js"
+  },
+  "keywords": [
+    "angular",
+    "template",
+    "cache",
+    "webpack",
+    "loader"
+  ],
+  "author": "Andrey Koperskiy",
+  "license": "MIT",
+  "devDependencies": {
+    "webpack": "^1.4.3"
+  },
+  "dependencies": {
+    "fastparse": "^1.0.0",
+    "html-minifier": "^0.6.8",
+    "loader-utils": "^0.2.4"
+  },
+  "directories": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/teux/ng-cache-loader.git"
+  },
+  "bugs": {
+    "url": "https://github.com/teux/ng-cache-loader/issues"
+  },
+  "homepage": "https://github.com/teux/ng-cache-loader"
+}
