@@ -30,8 +30,10 @@ module.exports = function (source) {
 
     source = htmlMinifier.minify(source, {
         removeComments: true,
+        removeCommentsFromCDATA: true,
         collapseWhitespace: true,
-        removeRedundantAttributes: true,
+        conservativeCollapse: true,
+        preserveLineBreaks: true,
         removeEmptyAttributes: true,
         keepClosingSlash: true
     });
