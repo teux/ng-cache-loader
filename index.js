@@ -32,7 +32,8 @@ module.exports = function (source) {
         removeComments: true,
         collapseWhitespace: true,
         removeRedundantAttributes: true,
-        removeEmptyAttributes: true
+        removeEmptyAttributes: true,
+        keepClosingSlash: true
     });
     scripts = scriptParser.parse('root', source, { scripts: [] }).scripts;
     source = Array.prototype.slice.apply(source);
