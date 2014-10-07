@@ -1,5 +1,11 @@
+/*
+    MIT License http://www.opensource.org/licenses/mit-license.php
+    Author Andrey Koperskiy @teux
+*/
 var htmlMinifier = require("html-minifier");
-var parser = require('./lib/scriptParser.js');
+var loaderUtils = require("loader-utils");
+var scriptParser = require('./lib/scriptParser.js');
+var urlParser = require('./lib/urlParser.js');
 var getTemplateId = require('./lib/templateId.js');
 
 var stub = 'angular.module(["ng"])' +
@@ -8,10 +14,17 @@ var stub = 'angular.module(["ng"])' +
     '\n}]);';
 
 module.exports = function (source) {
-    var result = [],
+    var query = loaderUtils.parseQuery(this.query),
+        result = [],
         scripts,
         html,
         scr;
+
+    var resolveUrl = function (src) {
+        return query.url !== false ?
+            urlParser(src)
+            : JSON.stringify(src);
+    };
 
     this.cacheable && this.cacheable();
 
@@ -21,7 +34,7 @@ module.exports = function (source) {
         removeRedundantAttributes: true,
         removeEmptyAttributes: true
     });
-    scripts = parser.parse("root", source, { scripts: [] }).scripts;
+    scripts = scriptParser.parse('root', source, { scripts: [] }).scripts;
     source = Array.prototype.slice.apply(source);
 
     // Prepare named templates
@@ -34,7 +47,7 @@ module.exports = function (source) {
         if (scr.id) {
             result.push({
                 key: scr.id,
-                val: JSON.stringify(html)
+                val: resolveUrl(html)
             });
         } else {
             source.splice(scr.idx, 0, html);
@@ -45,7 +58,7 @@ module.exports = function (source) {
     if (/[^\s]/.test(source)) {
         result.push({
             key: getTemplateId.apply(this),
-            val: JSON.stringify(source)
+            val: resolveUrl(source)
         });
     }
 

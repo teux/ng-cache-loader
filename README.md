@@ -96,11 +96,47 @@ Match `.html` extension with loader:
 module: {
     loaders: [
         {
-            test: /.html$/,
+            test: /\.html$/,
             loader: "ng-cache?prefix=[dir]/[dir]"
         }
     ]
 },
+```
+
+## URL resolve
+
+Relative links to the local images are resolved by default. 
+
+``` html
+<!-- Source -->
+<img src="../img/logo.png"></img>
+
+<!-- becomes -->
+<img src="data:image/png;base64,..."></img>
+```
+
+Use this in conjunction with [url-loader](https://github.com/webpack/url-loader). For instance:
+
+``` javascript
+require('url?name=img/[name].[ext]!ng-cache!./templates/myPartial.html')
+```
+
+Using webpack config is more convenience:
+
+``` javascript
+module: {
+    loaders: [
+        { test: /\.html$/, loader: "ng-cache?prefix=[dir]/[dir]" },
+        { test: /\.png$/, loader: 'url?name=img/[name].[ext]&mimetype=image/png' },
+        { test: /\.gif$/, loader: 'url?name=img/[name].[ext]&mimetype=image/gif' }
+    ]
+},
+```
+
+To switch off url resolving use `-url` query param:
+
+``` javascript
+require('ng-cache?-url!./myPartial.html')
 ```
 
 # License
