@@ -57,7 +57,7 @@ You can mix named templates and simple markup:
 </script>
 
 <!-- markup outside script tags available as ng-include="'myPartial.html'" -->
-<div>...</div>
+<div ng-include="'myFirstTemplate'">...</div>
 
 <script type ="text/ng-template" id="mySecondTemplate">
   <!-- then use ng-include="'mySecondTemplate'" -->

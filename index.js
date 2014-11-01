@@ -8,10 +8,11 @@ var scriptParser = require('./lib/scriptParser.js');
 var urlParser = require('./lib/urlParser.js');
 var getTemplateId = require('./lib/templateId.js');
 
-var stub = 'angular.module(["ng"])' +
-    '.run(["$templateCache", function (c) {\n' +
-    '    c.put("$key", $val);' +
-    '\n}]);';
+var stub = 'var v$i=$val;\n' +
+    'angular.module(["ng"])' +
+    '.run(["$templateCache",function(c){' +
+    'c.put("$key", v$i)' +
+    '}]);';
 
 module.exports = function (source) {
     var query = loaderUtils.parseQuery(this.query),
@@ -61,7 +62,8 @@ module.exports = function (source) {
     if (/[^\s]/.test(source)) {
         result.push({
             key: getTemplateId.apply(this),
-            val: resolveUrl(source)
+            val: resolveUrl(source),
+            i: result.length + 1
         });
     }
 
@@ -70,5 +72,6 @@ module.exports = function (source) {
             return res[name] ? res[name] : match;
         });
     });
+    result.push('module.exports=v'+result.length+';');
     return result.join('\n');
 };
