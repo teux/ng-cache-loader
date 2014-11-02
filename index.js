@@ -1,7 +1,7 @@
 /*
-    MIT License http://www.opensource.org/licenses/mit-license.php
-    Author Andrey Koperskiy @teux
-*/
+ MIT License http://www.opensource.org/licenses/mit-license.php
+ Author Andrey Koperskiy @teux
+ */
 var htmlMinifier = require("html-minifier");
 var loaderUtils = require("loader-utils");
 var scriptParser = require('./lib/scriptParser.js');
@@ -38,7 +38,7 @@ module.exports = function (source) {
         removeEmptyAttributes: true,
         keepClosingSlash: true
     });
-    scripts = scriptParser.parse('root', source, { scripts: [] }).scripts;
+    scripts = scriptParser.parse('root', source, {scripts: []}).scripts;
     source = Array.prototype.slice.apply(source);
 
     // Prepare named templates
@@ -51,7 +51,8 @@ module.exports = function (source) {
         if (scr.id) {
             result.push({
                 key: scr.id,
-                val: resolveUrl(html)
+                val: resolveUrl(html),
+                i: result.length + 1
             });
         } else {
             source.splice(scr.idx, 0, html);
@@ -72,6 +73,6 @@ module.exports = function (source) {
             return res[name] ? res[name] : match;
         });
     });
-    result.push('module.exports=v'+result.length+';');
+    result.push('module.exports=v' + result.length + ';');
     return result.join('\n');
 };
