@@ -88,6 +88,15 @@ require('ng-cache?prefix=public/[dir]//[dir]/templates!./far/far/away/path/to/my
 // => ng-include="'public/far/path/templates/myPartial.html'" 
 ```
 
+## Root
+
+With `root` param you can specify which directory in the template path is the root, from which the template path should be created:
+
+``` javascript
+require('ng-cache?root=app!./js/app/module/myPartial.html')
+// => ng-include="'module/myPartial.html'"
+```
+
 ## webpack config
 
 Match `.html` extension with loader:
