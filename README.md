@@ -88,6 +88,15 @@ require('ng-cache?prefix=public/[dir]//[dir]/templates!./far/far/away/path/to/my
 // => ng-include="'public/far/path/templates/myPartial.html'" 
 ```
 
+## Module
+
+By default, templates will be added to the default AngularJS 'ng' module run() method. 
+Use this parameter to use a different module name:
+
+``` javascript
+require('ng-cache?module=moduleName!./path/to/myPartial.html')
+```
+
 ## webpack config
 
 Match `.html` extension with loader:
