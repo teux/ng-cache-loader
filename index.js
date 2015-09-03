@@ -9,7 +9,7 @@ var urlParser = require('./lib/urlParser.js');
 var getTemplateId = require('./lib/templateId.js');
 
 var stub = 'var v$i=$val;\n' +
-    'window.angular.module(["ng"])' +
+    'window.angular.module(["$mod"])' +
     '.run(["$templateCache",function(c){' +
     'c.put("$key", v$i)' +
     '}]);';
@@ -28,6 +28,8 @@ module.exports = function (source) {
     };
 
     this.cacheable && this.cacheable();
+
+    var mod = query.module || 'ng';
 
     source = htmlMinifier.minify(source, {
         removeComments: true,
@@ -50,6 +52,7 @@ module.exports = function (source) {
             .join('');
         if (scr.id) {
             result.push({
+                mod: mod,
                 key: scr.id,
                 val: resolveUrl(html),
                 i: result.length + 1
@@ -62,6 +65,7 @@ module.exports = function (source) {
     source = source.join('');
     if (/[^\s]/.test(source)) {
         result.push({
+            mod: mod,
             key: getTemplateId.apply(this),
             val: resolveUrl(source),
             i: result.length + 1
