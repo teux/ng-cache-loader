@@ -1,10 +1,10 @@
 {
   "name": "ng-cache-loader",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "description": "Puts HTML partials in the Angular's $templateCache.",
   "main": "index.js",
   "scripts": {
-    "test": "./node_modules/webpack/bin/webpack.js --config=test/webpack.config.js"
+    "test": "test/test.sh"
   },
   "keywords": [
     "angular",
@@ -20,6 +20,8 @@
   },
   "license": "MIT",
   "devDependencies": {
+    "chai": "^3.2.0",
+    "mocha": "^2.3.0",
     "webpack": "^1.4.3"
   },
   "dependencies": {

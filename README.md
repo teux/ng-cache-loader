@@ -74,19 +74,38 @@ require('ng-cache?prefix=public/templates!./path/to/myPartial.html')
 ```
 
 Prefix can mask the real directory with the explicit value
-or retrieve the real directory name (use `[dir]`):
+or retrieve the real directory name (use `*` or `[dir]`):
 
 ``` javascript
-require('ng-cache?prefix=public/[dir]/templates!./path/to/myPartial.html')
+require('ng-cache?prefix=public/*/templates!./path/to/myPartial.html')
 // => ng-include="'public/path/templates/myPartial.html'" 
 ```
 
 Prefix can strip the real directory name (use `//`):
 
 ``` javascript
-require('ng-cache?prefix=public/[dir]//[dir]/templates!./far/far/away/path/to/myPartial.html')
+require('ng-cache?prefix=public/*//*/templates!./far/far/away/path/to/myPartial.html')
 // => ng-include="'public/far/path/templates/myPartial.html'" 
 ```
+
+Prefix can be extended through a directory tree (use `**` or `[dirs]`). See the next section.
+
+## Root
+
+You can specify root directory in prefix. It is enough to specify a single directory name.
+
+``` javascript
+require('ng-cache?prefix=packman:**!/User/myself/Projects/packman/path/to/myPartial.html')
+// => ng-include="'path/to/myPartial.html'"
+
+require('ng-cache?prefix=packman:**!/User/myself/Projects/packman/far/path/to/myPartial.html')
+// => ng-include="'far/path/to/myPartial.html'"
+```
+
+You can specify two or three directories to uniquely associate root with place in the file system.
+
+It is also possible to combine wildcards in prefix. For instance `prefix=packman:**/tmpls//*`.
+
 
 ## Module
 
