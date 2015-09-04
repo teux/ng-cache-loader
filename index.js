@@ -31,15 +31,18 @@ module.exports = function (source) {
 
     var mod = query.module || 'ng';
 
-    source = htmlMinifier.minify(source, {
-        removeComments: true,
-        removeCommentsFromCDATA: true,
-        collapseWhitespace: true,
-        conservativeCollapse: true,
-        preserveLineBreaks: true,
-        removeEmptyAttributes: true,
-        keepClosingSlash: true
-    });
+    try {
+        source = htmlMinifier.minify(source, {
+            removeComments: true,
+            removeCommentsFromCDATA: true,
+            collapseWhitespace: true,
+            conservativeCollapse: true,
+            preserveLineBreaks: true,
+            removeEmptyAttributes: true,
+            keepClosingSlash: true
+        });
+    } catch (e) {}
+
     scripts = scriptParser.parse('root', source, {scripts: []}).scripts;
     source = Array.prototype.slice.apply(source);
 
