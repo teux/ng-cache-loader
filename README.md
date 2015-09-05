@@ -92,19 +92,28 @@ Prefix can be extended through a directory tree (use `**` or `[dirs]`). See the 
 
 ## Root
 
-You can specify root directory in prefix. It is enough to specify a single directory name.
+You can specify root directory in prefix separated by a colon `prefix=projDir:**`. It is enough to specify a single directory name (or two, or three), if it is uniquely associated with place in the file system.
 
-``` javascript
-require('ng-cache?prefix=packman:**!/User/myself/Projects/packman/path/to/myPartial.html')
-// => ng-include="'path/to/myPartial.html'"
+Suppose a project structure:
 
-require('ng-cache?prefix=packman:**!/User/myself/Projects/packman/far/path/to/myPartial.html')
-// => ng-include="'far/path/to/myPartial.html'"
+```
+/User/myself/Projects/packman/
+  ├─ app/tmpls/field/field.html
+  └─ components/skins/tmpls/yellow/yellow.html
 ```
 
-You can specify two or three directories to uniquely associate root with place in the file system.
+You require templates by relative path from the inside of `app/tmpls` and `components/skins/tmpls`,
+and you get a prefix relative to the root:
 
-It is also possible to combine wildcards in prefix. For instance `prefix=packman:**/tmpls//*`.
+``` javascript
+require('ng-cache?prefix=packman:**!./field/field.html')
+// => ng-include="'app/tmpls/field/field.html'"
+
+require('ng-cache?prefix=packman:**!./yellow/yellow.html')
+// => ng-include="'components/skins/tmpls/yellow/yellow.html'"
+```
+
+It is also possible to combine wildcards, i.e. `prefix=packman:**/tmpls//*`.
 
 
 ## Module
