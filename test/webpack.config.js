@@ -6,7 +6,7 @@ module.exports = {
     },
     module: {
         loaders: [
-            { test: /\.html$/, loader: '../index.js?prefix=grot/[dir]//[dir]//tmpl' }
+            { test: /\.html$/, loader: '../index.js?prefix=grot/[dir]//[dir]//tmpl&module=appModule' }
         ]
     }
 };

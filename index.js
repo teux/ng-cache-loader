@@ -8,11 +8,25 @@ var scriptParser = require('./lib/scriptParser.js');
 var urlParser = require('./lib/urlParser.js');
 var getTemplateId = require('./lib/templateId.js');
 
-var stub = 'var v$i=$val;\n' +
-    'window.angular.module(["$mod"])' +
-    '.run(["$templateCache",function(c){' +
-    'c.put("$key", v$i)' +
-    '}]);';
+var PRE_STUB = 'var angular=window.angular,ngModule;\n' +
+    'try {ngModule=angular.module(["${mod}"])}\n' +
+    'catch(e){ngModule=angular.module("${mod}",[])}';
+
+var STUB = 'var v${i}=${val};\n' +
+    'ngModule.run(["$templateCache",function(c){c.put("${key}",v${i})}]);';
+
+var DEF_MODULE = 'ng';
+/**
+ * Replaces placeholders with values.
+ * @param {string} stub
+ * @param {Object} values Key-value pairs.
+ * @returns {string}
+ */
+var supplant = function (stub, values) {
+    return stub.replace(/\$\{([^}]+)\}/g, function (match, key) {
+        return values[key] || match;
+    });
+};
 
 module.exports = function (source) {
     var query = loaderUtils.parseQuery(this.query),
@@ -23,13 +37,13 @@ module.exports = function (source) {
 
     var resolveUrl = function (src) {
         return query.url !== false ?
-            urlParser(src)
-            : JSON.stringify(src);
+            urlParser(src) :
+            JSON.stringify(src);
     };
 
     this.cacheable && this.cacheable();
 
-    var mod = query.module || 'ng';
+    var mod = query.module || DEF_MODULE;
 
     try {
         source = htmlMinifier.minify(source, {
@@ -55,7 +69,6 @@ module.exports = function (source) {
             .join('');
         if (scr.id) {
             result.push({
-                mod: mod,
                 key: scr.id,
                 val: resolveUrl(html),
                 i: result.length + 1
@@ -66,20 +79,18 @@ module.exports = function (source) {
     }
     // Prepare the ramaining templates (means w/o `script` tag or w/o `id` attribute)
     source = source.join('');
+
     if (/[^\s]/.test(source)) {
         result.push({
-            mod: mod,
             key: getTemplateId.apply(this),
             val: resolveUrl(source),
             i: result.length + 1
         });
     }
+    result = result.map(supplant.bind(null, STUB));
 
-    result.forEach(function (res, i) {
-        result[i] = stub.replace(/\$([\w\d_\-]+)/g, function (match, name) {
-            return res[name] ? res[name] : match;
-        });
-    });
     result.push('module.exports=v' + result.length + ';');
+    result.unshift(supplant(PRE_STUB, {mod: mod}));
+
     return result.join('\n');
 };
