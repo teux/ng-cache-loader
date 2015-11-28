@@ -93,7 +93,7 @@ Prefix can be extended through a directory tree (use `**` or `[dirs]`). See the 
 ## Root
 
 You can specify root directory for templates separated by a colon `prefix=root:**`. 
-It is enough to specify a single directory. Prefix counts directories from right to left and takes rightmost occurance of the specified directory.
+It is enough to specify a single directory name. Prefix counts real template path from right to left and takes first (rightmost) occurance of the root directory.
 
 ```
 /User/packman/Projects/packman/
@@ -101,8 +101,7 @@ It is enough to specify a single directory. Prefix counts directories from right
   └─ components/skins/tmpls/yellow.html
 ```
 
-In above example you require templates by relative path from the inside of `app/tmpls` and `components/skins/tmpls`,
-and you get a prefix relative to the root:
+With this directory tree you require templates from the inside of `app/tmpls` and `components/skins/tmpls`:
 
 ``` javascript
 require('ng-cache?prefix=packman:**!./field.html')
