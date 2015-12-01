@@ -21,9 +21,8 @@ require('ng-cache!./demo/template/myPartial.html');
 Partial will be available as `ng-include="'myPartial.html'"`
 or `templateUrl: 'myPartial.html'`.
 
-Note that the inline require syntax is used in examples for simplicity. It's recommended to use `webpack.config.js` 
-for ng-cache configuring. Please see this [comment](https://github.com/webpack/webpack/issues/1626#issuecomment-156758230)
-and the [manual](https://webpack.github.io/docs/using-loaders.html#loaders-in-require).
+Note that the inline require syntax is used in examples for simplicity. 
+It's recommended to use webpack [config](#webpack-config).
 
 ## Named templates
 
@@ -129,7 +128,7 @@ require('ng-cache?module=moduleName!./path/to/myPartial.html')
 
 If the module does not exist it is created.
 
-## webpack config
+## Webpack config
 
 Match `.html` extension with loader:
 
@@ -144,9 +143,13 @@ module: {
 },
 ```
 
+Note that the inline require syntax is used in examples for simplicity. It's recommended to use webpack config. 
+Please see this [comment](https://github.com/webpack/webpack/issues/1626#issuecomment-156758230)
+and the [manual](https://webpack.github.io/docs/using-loaders.html#loaders-in-require).
+
 ## URL resolve
 
-Relative links to the local images are resolved by default. 
+Relative links to the local images are resolved by default (to prevent it use `-url` query param).
 
 ``` html
 <!-- Source -->
