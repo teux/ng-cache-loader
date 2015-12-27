@@ -1,3 +1,13 @@
+var minimizeOptions = JSON.stringify({
+    removeComments: true,
+    removeCommentsFromCDATA: true,
+    collapseWhitespace: true,
+    conservativeCollapse: false,
+    preserveLineBreaks: true,
+    removeEmptyAttributes: true,
+    keepClosingSlash: true
+});
+
 module.exports = {
     entry: './test/entry.js',
     output: {
@@ -6,7 +16,12 @@ module.exports = {
     },
     module: {
         loaders: [
-            { test: /\.html$/, loader: '../index.js?prefix=grot/[dir]//[dir]//tmpl&module=appModule' }
+            {
+                test: /\.html$/,
+                loader: '../index.js?prefix=grot/[dir]//[dir]//tmpl&module=appModule' +
+                    '&minimizeOptions=' + minimizeOptions +
+                    '&conservativeCollapse'
+            }
         ]
     }
 };

@@ -1,6 +1,6 @@
 {
   "name": "ng-cache-loader",
-  "version": "0.0.14",
+  "version": "0.0.15",
   "description": "Puts HTML partials in the Angular's $templateCache.",
   "main": "index.js",
   "scripts": {
@@ -25,6 +25,7 @@
     "webpack": "^1.4.3"
   },
   "dependencies": {
+    "extend": "^3.0.0",
     "fastparse": "^1.0.0",
     "html-minifier": "~0.7.0",
     "loader-utils": "^0.2.4"

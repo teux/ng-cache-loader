@@ -140,12 +140,48 @@ module: {
             loader: "ng-cache?prefix=[dir]/[dir]"
         }
     ]
-},
+}
 ```
 
 Note that the inline require syntax is used in examples for simplicity. It's recommended to use webpack config. 
 Please see this [comment](https://github.com/webpack/webpack/issues/1626#issuecomment-156758230)
 and the [manual](https://webpack.github.io/docs/using-loaders.html#loaders-in-require).
+
+## HTML minification
+
+The [html-minifier](https://github.com/kangax/html-minifier) is used for templates minification with the default options:
+```javascript
+{
+    removeComments: true,
+    removeCommentsFromCDATA: true,
+    collapseWhitespace: true,
+    conservativeCollapse: true,
+    preserveLineBreaks: true,
+    removeEmptyAttributes: true,
+    keepClosingSlash: true
+}
+```
+
+You can override any of options with the negative query parameter:
+
+```javascript
+ng-cache?-conservativeCollapse&-preserveLineBreaks
+```
+
+Or you can extend defaults with `minimizeOptions`:
+```javascript
+var minimizeOptions = {
+    conservativeCollapse: false,
+    preserveLineBreaks: false
+};
+module.exports = {
+    module: {
+        loaders: [
+            {test: /\.html$/, loader: 'ng-cache?minimizeOptions=' + JSON.stringify(minimizeOptions)}
+        ]
+    }
+}
+```
 
 ## URL resolve
 

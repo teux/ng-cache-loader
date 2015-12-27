@@ -2,6 +2,7 @@
  MIT License http://www.opensource.org/licenses/mit-license.php
  Author Andrey Koperskiy @teux
  */
+var extend = require("extend");
 var htmlMinifier = require("html-minifier");
 var loaderUtils = require("loader-utils");
 var scriptParser = require('./lib/scriptParser.js');
@@ -15,47 +16,65 @@ var PRE_STUB = 'var angular=window.angular,ngModule;\n' +
 var STUB = 'var v${i}=${val};\n' +
     'ngModule.run(["$templateCache",function(c){c.put("${key}",v${i})}]);';
 
-var DEF_MODULE = 'ng';
 /**
  * Replaces placeholders with values.
  * @param {string} stub
  * @param {Object} values Key-value pairs.
  * @returns {string}
  */
-var supplant = function (stub, values) {
+function supplant (stub, values) {
     return stub.replace(/\$\{([^}]+)\}/g, function (match, key) {
         return values[key] || match;
     });
-};
+}
+/**
+ * Replaces urls with `require(url)` for further processing in url-loader or file-loader.
+ * @param {Object} query ng-cache-loader options.
+ * @param {string} src
+ * @returns {string} JSON
+ */
+function resolveUrl (query, src) {
+    return query.url !== false ?
+        urlParser(src) :
+        JSON.stringify(src);
+}
 
 module.exports = function (source) {
-    var query = loaderUtils.parseQuery(this.query),
-        result = [],
-        scripts,
-        html,
-        scr;
-
-    var resolveUrl = function (src) {
-        return query.url !== false ?
-            urlParser(src) :
-            JSON.stringify(src);
+    var opts = {
+        module: 'ng',
+        // next are html-minifier default options
+        removeComments: true,
+        removeCommentsFromCDATA: true,
+        collapseWhitespace: true,
+        conservativeCollapse: true,
+        preserveLineBreaks: true,
+        removeEmptyAttributes: true,
+        keepClosingSlash: true
     };
+    var minimizeOpts = this.query.match(/&?minimizeOptions[\s\n]*=[\s\n]*([^&]*)/);
+    var result = [];
+    var scripts, html, scr;
 
     this.cacheable && this.cacheable();
 
-    var mod = query.module || DEF_MODULE;
+    // Remove minimizeOptions from query string because JSON is not suitable for query parameter
+    if (minimizeOpts) {
+        this.query = this.query.replace(minimizeOpts[0], '');
+    }
+    try {
+        minimizeOpts = minimizeOpts && JSON.parse(minimizeOpts[1]);
+    } catch (e) {
+        throw new Error('Invalid value of query parameter minimizeOptions');
+    }
+
+    // Parse query and append minimize options
+    extend(opts, minimizeOpts, loaderUtils.parseQuery(this.query));
 
     try {
-        source = htmlMinifier.minify(source, {
-            removeComments: true,
-            removeCommentsFromCDATA: true,
-            collapseWhitespace: true,
-            conservativeCollapse: true,
-            preserveLineBreaks: true,
-            removeEmptyAttributes: true,
-            keepClosingSlash: true
-        });
-    } catch (e) {}
+        source = htmlMinifier.minify(source, extend({}, opts));
+    } catch (e) {
+        this.emitWarning(e.toString() + '\nUsing unminified HTML');
+    }
 
     scripts = scriptParser.parse('root', source, {scripts: []}).scripts;
     source = Array.prototype.slice.apply(source);
@@ -70,7 +89,7 @@ module.exports = function (source) {
         if (scr.id) {
             result.push({
                 key: scr.id,
-                val: resolveUrl(html),
+                val: resolveUrl(opts, html),
                 i: result.length + 1
             });
         } else {
@@ -83,14 +102,14 @@ module.exports = function (source) {
     if (/[^\s]/.test(source)) {
         result.push({
             key: getTemplateId.apply(this),
-            val: resolveUrl(source),
+            val: resolveUrl(opts, source),
             i: result.length + 1
         });
     }
     result = result.map(supplant.bind(null, STUB));
 
     result.push('module.exports=v' + result.length + ';');
-    result.unshift(supplant(PRE_STUB, {mod: mod}));
+    result.unshift(supplant(PRE_STUB, {mod: opts.module}));
 
     return result.join('\n');
 };
