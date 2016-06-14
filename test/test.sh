@@ -5,3 +5,5 @@
 
 # build example in test/out/main.out.js
 ./node_modules/webpack/bin/webpack.js --config=test/webpack.config.js
+
+read -p "Done..." nothing

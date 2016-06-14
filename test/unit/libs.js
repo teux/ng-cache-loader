@@ -22,11 +22,15 @@ describe(libPath, function () {
      * @param {string} [prefix] Prefix.
      * @returns {string} Result
      */
-    var run = function (resource, prefix) {
+    var run = function (resource, prefix, stripEndings) {
         var params = {resource: resource};
-
+        
         if (prefix !== undefined) {
             params.query = '?prefix=' + prefix;
+        }
+        if (stripEndings !== undefined)
+        {
+            params.query += '&stripEndings=' + stripEndings;
         }
         return lib.call(params);
     };
@@ -106,6 +110,30 @@ describe(libPath, function () {
                 expect(run(res, pref)).to.equal('/app/tmpl/' + getFile(res));
             });
         });
+    });
+
+    describe('strip file extensions', function ()
+    {
+       it('#should strip after last period', function ()
+       {
+          resources.forEach(function (res)
+          {
+             expect(run(res, '', true)).to.be.oneOf(['actions', 'popover']);
+          });
+       });
+
+       it('#should not strip parts of file names with period', function() {
+          var resource = 'W:\\Projects\\packman\\components\\article\\actions\\more.actions.html'
+          expect(run(resource, '', true)).to.equal('more.actions');
+       })
+
+       it('#should work with prefix', function () {
+          var pref = 'app/tmpl';
+          resources.forEach(function (res)
+          {
+             expect(run(res, pref, true)).to.be.oneOf([pref + '/actions', pref + '/popover']);
+          });
+       })
     });
 
     describe('take from path (relative prefix)', function () {

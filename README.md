@@ -93,6 +93,15 @@ require('ng-cache?prefix=public/*//*/templates!./far/far/away/path/to/myPartial.
 
 Prefix can be extended through a directory tree (use `**` or `[dirs]`). See the next section.
 
+## Strip file endings
+
+You can specify to strip file endings (file endings are defined as any char sequence before the last `.` - thus endings like `.tar.gz` are not handled correctly): 
+
+``` javascript
+require('ng-cache?stripEndings=true!./path/to/myPartial.html')
+// => ng-include="'myPartial'"
+```
+
 ## Root
 
 You can specify root directory for templates separated by a colon `prefix=root:**`. 
