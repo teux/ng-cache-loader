@@ -116,6 +116,20 @@ require('ng-cache?prefix=packman:**!./yellow.html')
 
 It is also possible to combine wildcards in prefix, i.e. `prefix=packman:**/tmpls//*`.
 
+## Name
+
+Use `name` query parameter to strip file extension or add suffix:
+
+``` javascript
+// 
+require('ng-cache?name=[name].tpl!./field.html')
+// => ng-include="'field.tpl'"
+
+require('ng-cache?name=[name]-foo.[ext]!./field.html')
+// => ng-include="'field-foo.html'"
+```
+ 
+Note. File extension are defined as any char sequence after the last `.`.
 
 ## Module
 

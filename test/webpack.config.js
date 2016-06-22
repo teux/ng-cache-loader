@@ -18,7 +18,7 @@ module.exports = {
         loaders: [
             {
                 test: /\.html$/,
-                loader: '../index.js?prefix=grot/[dir]//[dir]//tmpl&module=appModule' +
+                loader: '../index.js?prefix=grot/[dir]//[dir]//tmpl&module=appModule&name=[name].tpl' +
                     '&minimizeOptions=' + minimizeOptions +
                     '&conservativeCollapse'
             }

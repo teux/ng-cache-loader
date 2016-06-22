@@ -101,7 +101,7 @@ module.exports = function (source) {
 
     if (/[^\s]/.test(source)) {
         result.push({
-            key: getTemplateId.apply(this),
+            key: getTemplateId.call(this, source),
             val: resolveUrl(opts, source),
             i: result.length + 1
         });

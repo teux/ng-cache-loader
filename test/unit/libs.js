@@ -376,6 +376,57 @@ describe(libPath, function () {
         });
     });
 
+    describe('file name pattern', function() {
+        var params = {
+            resource: 'template/popover/popover.html'
+        };
+
+        it('#should strip extension', function() {
+            params.query = '?name=[name]';
+            expect(lib.call(params)).to.equal('popover');
+            params.query += '&prefix=*/*';
+            expect(lib.call(params)).to.equal('template/popover/popover');
+        });
+
+        it('#should replace extension', function() {
+            params.query = '?name=[name].tpl';
+            expect(lib.call(params)).to.equal('popover.tpl');
+            params.query += '&prefix=*/*';
+            expect(lib.call(params)).to.equal('template/popover/popover.tpl');
+        });
+
+        it('#should swap name and extension', function() {
+            params.query = '?name=[ext].[name]';
+            expect(lib.call(params)).to.equal('html.popover');
+            params.query += '&prefix=*/*';
+            expect(lib.call(params)).to.equal('template/popover/html.popover');
+        });
+
+        it('#should swap name and extension', function() {
+            params.query = '?name=[ext].[name]';
+            expect(lib.call(params)).to.equal('html.popover');
+            params.query += '&prefix=*/*';
+            expect(lib.call(params)).to.equal('template/popover/html.popover');
+        });
+
+        it('#should append suffix', function() {
+            params.query = '?name=[name]-foo.[ext]';
+            expect(lib.call(params)).to.equal('popover-foo.html');
+        });
+
+        it('#should replace name with literal', function() {
+            params.query = '?name=foo';
+            expect(lib.call(params)).to.equal('foo');
+        });
+
+        it('#should ignore invalid name pattern', function() {
+            params.query = '?name=[name].[ext].[ext]';
+            expect(lib.call(params)).to.equal('popover.html');
+            params.query += '&prefix=*/*';
+            expect(lib.call(params)).to.equal(params.resource);
+        });
+    });
+
     describe('various casese', function () {
         var resources = [
             '/Users/myself/Projects/packman/web_modules/angular-ui-bootstrap/template/popover/popover.html',
