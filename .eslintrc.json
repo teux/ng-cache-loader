@@ -1,0 +1,15 @@
+{
+    "extends": "google",
+    "env": {
+        "node": true,
+        "mocha": true
+    },
+    "rules": {
+        "comma-dangle": ["error", "always-multiline"],
+        "curly": ["error", "all"],
+        "indent": ["error", 4],
+        "max-len": ["error", 120],
+        "no-implicit-coercion": 0,
+        "no-var": 0
+    }
+}

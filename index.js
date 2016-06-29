@@ -18,28 +18,28 @@ var STUB = 'var v${i}=${val};\n' +
 
 /**
  * Replaces placeholders with values.
- * @param {string} stub
+ * @param {string} stub Template ith placeholders.
  * @param {Object} values Key-value pairs.
- * @returns {string}
+ * @return {string} Resolved template.
  */
-function supplant (stub, values) {
-    return stub.replace(/\$\{([^}]+)\}/g, function (match, key) {
+function supplant(stub, values) {
+    return stub.replace(/\$\{([^}]+)\}/g, function(match, key) {
         return values[key] || match;
     });
 }
 /**
  * Replaces urls with `require(url)` for further processing in url-loader or file-loader.
  * @param {Object} query ng-cache-loader options.
- * @param {string} src
- * @returns {string} JSON
+ * @param {string} src Template text.
+ * @return {string} JSON
  */
-function resolveUrl (query, src) {
-    return query.url !== false ?
-        urlParser(src) :
-        JSON.stringify(src);
+function resolveUrl(query, src) {
+    return query.url === false ?
+        JSON.stringify(src) :
+        urlParser(src);
 }
 
-module.exports = function (source) {
+module.exports = function(source) {
     var opts = {
         module: 'ng',
         // next are html-minifier default options
@@ -53,9 +53,13 @@ module.exports = function (source) {
     };
     var minimizeOpts = this.query.match(/&?minimizeOptions[\s\n]*=[\s\n]*([^&]*)/);
     var result = [];
-    var scripts, html, scr;
+    var scripts;
+    var html;
+    var scr;
 
-    this.cacheable && this.cacheable();
+    if (this.cacheable) {
+        this.cacheable();
+    }
 
     // Remove minimizeOptions from query string because JSON is not suitable for query parameter
     if (minimizeOpts) {
