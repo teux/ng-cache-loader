@@ -14,6 +14,7 @@ var PRE_STUB = 'var angular=window.angular,ngModule;\n' +
     'catch(e){ngModule=angular.module("${mod}",[])}';
 
 var STUB = 'var v${i}=${val};\n' +
+    'var kv${i}={ key: "${key}", value: ${val} };\n' +
     'ngModule.run(["$templateCache",function(c){c.put("${key}",v${i})}]);';
 
 /**
@@ -72,7 +73,8 @@ module.exports = function(source) {
     }
 
     // Parse query and append minimize options
-    extend(opts, minimizeOpts, loaderUtils.parseQuery(this.query));
+    var parsedQuery = loaderUtils.parseQuery(this.query);
+    extend(opts, minimizeOpts, parsedQuery);
 
     try {
         source = htmlMinifier.minify(source, extend({}, opts));
@@ -112,7 +114,7 @@ module.exports = function(source) {
     }
     result = result.map(supplant.bind(null, STUB));
 
-    result.push('module.exports=v' + result.length + ';');
+    result.push('module.exports=' + (parsedQuery.keyValuePair ? 'kv' : 'v') + result.length + ';');
     result.unshift(supplant(PRE_STUB, {mod: opts.module}));
 
     return result.join('\n');
