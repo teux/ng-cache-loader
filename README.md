@@ -142,6 +142,17 @@ require('ng-cache?module=moduleName!./path/to/myPartial.html')
 
 If the module does not exist it is created.
 
+## Template id
+ 
+To obtain template id use `exportId` query parameter. Loader exports object with `id` and `template` keys.
+
+```javascript
+var template = require('ng-cache?exportId!./field.html')
+
+$('#wrapper').html(`<div id="bootstrapElement" data-ng-include="'${template.id}'"></div>`);
+angular.bootstrap($('#bootstrapElement'), [someModule]);
+```
+
 ## Webpack config
 
 Match `.html` extension with loader:

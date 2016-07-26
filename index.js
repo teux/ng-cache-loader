@@ -14,7 +14,8 @@ var PRE_STUB = 'var angular=window.angular,ngModule;\n' +
     'catch(e){ngModule=angular.module("${mod}",[])}';
 
 var STUB = 'var v${i}=${val};\n' +
-    'ngModule.run(["$templateCache",function(c){c.put("${key}",v${i})}]);';
+    'var id${i}="${key}";\n' +
+    'ngModule.run(["$templateCache",function(c){c.put(id${i},v${i})}]);';
 
 /**
  * Replaces placeholders with values.
@@ -28,7 +29,7 @@ function supplant(stub, values) {
     });
 }
 /**
- * Replaces urls with `require(url)` for further processing in url-loader or file-loader.
+ * Replaces urls with `require(url)` for further processing with url-loader or file-loader.
  * @param {Object} query ng-cache-loader options.
  * @param {string} src Template text.
  * @return {string} JSON
@@ -49,7 +50,7 @@ module.exports = function(source) {
         conservativeCollapse: true,
         preserveLineBreaks: true,
         removeEmptyAttributes: true,
-        keepClosingSlash: true
+        keepClosingSlash: true,
     };
     var minimizeOpts = this.query.match(/&?minimizeOptions[\s\n]*=[\s\n]*([^&]*)/);
     var result = [];
@@ -94,7 +95,7 @@ module.exports = function(source) {
             result.push({
                 key: scr.id,
                 val: resolveUrl(opts, html),
-                i: result.length + 1
+                i: result.length + 1,
             });
         } else {
             source.splice(scr.idx, 0, html);
@@ -107,12 +108,17 @@ module.exports = function(source) {
         result.push({
             key: getTemplateId.call(this, source),
             val: resolveUrl(opts, source),
-            i: result.length + 1
+            i: result.length + 1,
         });
     }
     result = result.map(supplant.bind(null, STUB));
 
-    result.push('module.exports=v' + result.length + ';');
+    // Return template string or id/template pair as module exports
+    if (opts.exportId) {
+        result.push('exports.id=id' + result.length + ';\nexports.template=v' + result.length + ';');
+    } else {
+        result.push('module.exports=v' + result.length + ';');
+    }
     result.unshift(supplant(PRE_STUB, {mod: opts.module}));
 
     return result.join('\n');
