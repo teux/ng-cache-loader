@@ -5,23 +5,22 @@ var minimizeOptions = JSON.stringify({
     conservativeCollapse: false,
     preserveLineBreaks: true,
     removeEmptyAttributes: true,
-    keepClosingSlash: true
+    keepClosingSlash: true,
 });
 
 module.exports = {
     entry: './test/entry.js',
     output: {
         path: './test/out',
-        filename: '[name].out.js'
+        filename: '[name].out.js',
     },
     module: {
         loaders: [
             {
                 test: /\.html$/,
                 loader: '../index.js?prefix=grot/[dir]//[dir]//tmpl&module=appModule&name=[name].tpl&-exportId' +
-                    '&minimizeOptions=' + minimizeOptions +
-                    '&conservativeCollapse'
-            }
-        ]
-    }
+                    '&minimizeOptions=' + minimizeOptions + '&conservativeCollapse',
+            },
+        ],
+    },
 };
