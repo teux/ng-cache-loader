@@ -144,7 +144,16 @@ If the module does not exist it is created.
 
 ## Template id
  
-To obtain template id use `exportId` query parameter. Loader exports object with `id` and `template` keys.
+To obtain template id use `exportIdOnly` query parameter. Loader exports `id` of a template.
+
+```javascript
+var template = require('ng-cache?exportIdOnly!./field.html')
+
+$('#wrapper').html(`<div id="bootstrapElement" data-ng-include="'${template}'"></div>`);
+angular.bootstrap($('#bootstrapElement'), [someModule]);
+```
+
+To obtain both template id and html partial use `exportId` query parameter. Loader exports object with `id` and `template` keys.
 
 ```javascript
 var template = require('ng-cache?exportId!./field.html')
