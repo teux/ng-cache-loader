@@ -116,6 +116,8 @@ module.exports = function(source) {
     // Return template string or id/template pair as module exports
     if (opts.exportId) {
         result.push('exports.id=id' + result.length + ';\nexports.template=v' + result.length + ';');
+    } else if (opts.exportIdOnly) {
+        result.push('module.exports=id' + result.length + ';');
     } else {
         result.push('module.exports=v' + result.length + ';');
     }
