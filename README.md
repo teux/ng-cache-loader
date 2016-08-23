@@ -183,9 +183,9 @@ and the [manual](https://webpack.github.io/docs/using-loaders.html#loaders-in-re
 
 ## HTML minification
 
-Minification is enabled by default. You can switch it off by setting `minimize` query parameter to `false`:
+Minification is enabled by default. You can switch it off by setting `-minimize`:
 ```javascript
-ng-cache?minimize=false
+ng-cache?-minimize
 ```
 
 The [html-minifier](https://github.com/kangax/html-minifier) is used for templates minification with the default options:
