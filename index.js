@@ -43,6 +43,7 @@ function resolveUrl(query, src) {
 module.exports = function(source) {
     var opts = {
         module: 'ng',
+        minimize: true,
         // next are html-minifier default options
         removeComments: true,
         removeCommentsFromCDATA: true,
@@ -75,10 +76,12 @@ module.exports = function(source) {
     // Parse query and append minimize options
     extend(opts, minimizeOpts, loaderUtils.parseQuery(this.query));
 
-    try {
-        source = htmlMinifier.minify(source, extend({}, opts));
-    } catch (e) {
-        this.emitWarning(e.toString() + '\nUsing unminified HTML');
+    if (opts.minimize) {
+        try {
+            source = htmlMinifier.minify(source, extend({}, opts));
+        } catch (e) {
+            this.emitWarning(e.toString() + '\nUsing unminified HTML');
+        }
     }
 
     scripts = scriptParser.parse('root', source, {scripts: []}).scripts;
