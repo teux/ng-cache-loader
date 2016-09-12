@@ -15,7 +15,10 @@ var PRE_STUB = 'var angular=window.angular,ngModule;\n' +
 
 var STUB = 'var v${i}=${val};\n' +
     'var id${i}="${key}";\n' +
-    'ngModule.run(["$templateCache",function(c){c.put(id${i},v${i})}]);';
+    // added injector to load $templateCache for dynamic chunks
+    'var inj=angular.element(window.document).injector();\n' +
+    'if(inj){inj.get("$templateCache").put(id${i},v${i});}\n' +
+    'else{ngModule.run(["$templateCache",function(c){c.put(id${i},v${i})}]);}';
 
 /**
  * Replaces placeholders with values.
