@@ -110,13 +110,14 @@ module.exports = function(source) {
     // Prepare the ramaining templates (means w/o `script` tag or w/o `id` attribute)
     source = source.join('');
 
-    if (/[^\s]/.test(source)) {
+    if (/[^\s]/.test(source) || !result.length) {
         result.push({
             key: getTemplateId.call(this, source),
             val: resolveUrl(opts, source),
             i: result.length + 1,
         });
     }
+
     result = result.map(supplant.bind(null, STUB));
 
     // Return template string or id/template pair as module exports
