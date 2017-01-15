@@ -8,6 +8,7 @@ var loaderUtils = require("loader-utils");
 var scriptParser = require('./lib/scriptParser.js');
 var urlParser = require('./lib/urlParser.js');
 var getTemplateId = require('./lib/templateId.js');
+var getModuleId = require('./lib/moduleId.js');
 
 var PRE_STUB = 'var angular=window.angular,ngModule;\n' +
     'try {ngModule=angular.module(["${mod}"])}\n' +
@@ -45,7 +46,6 @@ function resolveUrl(query, src) {
 
 module.exports = function(source) {
     var opts = {
-        module: 'ng',
         minimize: true,
         // next are html-minifier default options
         removeComments: true,
@@ -57,6 +57,7 @@ module.exports = function(source) {
         keepClosingSlash: true,
     };
     var minimizeOpts = this.query.match(/&?minimizeOptions[\s\n]*=[\s\n]*([^&]*)/);
+    var moduleId = 'ng';
     var result = [];
     var scripts;
     var html;
@@ -111,8 +112,11 @@ module.exports = function(source) {
     source = source.join('');
 
     if (/[^\s]/.test(source) || !result.length) {
+        var templateId = getTemplateId.call(this, source);
+        var mod = getModuleId.call(this, templateId);
+        moduleId = mod.moduleId;
         result.push({
-            key: getTemplateId.call(this, source),
+            key: mod.templateId,
             val: resolveUrl(opts, source),
             i: result.length + 1,
         });
@@ -128,7 +132,7 @@ module.exports = function(source) {
     } else {
         result.push('module.exports=v' + result.length + ';');
     }
-    result.unshift(supplant(PRE_STUB, {mod: opts.module}));
+    result.unshift(supplant(PRE_STUB, {mod: moduleId}));
 
     return result.join('\n');
 };
