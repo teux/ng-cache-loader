@@ -8,7 +8,9 @@ var libPath;
 var lib;
 
 libPath = 'lib/templateId';
+moduleLibPath = 'lib/moduleId';
 lib = require(path.join(cwd, libPath));
+moduleLib = require(path.join(cwd, moduleLibPath));
 
 describe(libPath, function() {
     var resources = [
@@ -429,6 +431,30 @@ describe(libPath, function() {
             expect(lib.call(params)).to.equal('popover.html');
             params.query += '&prefix=*/*';
             expect(lib.call(params)).to.equal(params.resource);
+        });
+    });
+
+    describe('module id pattern', function() {
+        var params = {
+            resource: 'template/popover/popover.html'
+        };
+
+        it('#should replace root', function() {
+            templateId = 'some/popover.html';
+            params.query = '?name=[file].[ext]&module=web.[root]';
+            expect(moduleLib.call(params, templateId)).to.deep.equal({moduleId: 'web.some', templateId: 'popover.html'});
+        });
+
+        it('#should replace nothing', function() {
+            templateId = 'some/popover.html';
+            params.query = '?name=[file].[ext]&module=some';
+            expect(moduleLib.call(params, templateId)).to.deep.equal({moduleId: 'some', templateId: 'some/popover.html'});
+        });
+
+        it('#should be ng by default', function() {
+            templateId = 'some/popover.html';
+            params.query = '?name=[file].[ext]';
+            expect(moduleLib.call(params, templateId)).to.deep.equal({moduleId: 'ng', templateId: 'some/popover.html'});
         });
     });
 

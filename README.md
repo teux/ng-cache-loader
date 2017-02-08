@@ -142,6 +142,20 @@ require('ng-cache?module=moduleName!./path/to/myPartial.html')
 
 If the module does not exist it is created.
 
+#### Dynamic pattern for Module:
+
+``` javascript
+require('ng-cache?module=moduleName.[root]&prefix=packs:**!./packs/path/to/myPartial.html')
+```
+
+In such query `[root]` means that first part of `templateId` *(here it is `path/to/myPartial.html`)* will be stripped out and placed as a part of `moduleId`.
+
+In current example resulting values:
+- `moduleId`: `"moduleName.path"` 
+- `templateId`: `"to/myPartial.html"` 
+
+Useful in case you want save few bytes.
+
 ## Template id
  
 To obtain template id use `exportIdOnly` query parameter. Loader exports `id` of a template.
