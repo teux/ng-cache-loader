@@ -1,3 +1,5 @@
+var path = require('path');
+
 var minimizeOptions = JSON.stringify({
     removeComments: true,
     removeCommentsFromCDATA: true,
@@ -9,9 +11,10 @@ var minimizeOptions = JSON.stringify({
 });
 
 module.exports = {
-    entry: './test/entry.js',
+    context: __dirname,
+    entry: path.resolve(__dirname, 'entry.js'),
     output: {
-        path: './test/out',
+        path: path.resolve(__dirname, 'out'),
         filename: '[name].out.js',
     },
     module: {

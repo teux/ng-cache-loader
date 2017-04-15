@@ -28,9 +28,9 @@ describe(libPath, function() {
     var run = function(resource, prefix) {
         var params = {resource: resource};
 
-        if (prefix !== undefined) {
-            params.query = '?prefix=' + prefix;
-        }
+        params.query = prefix !== undefined ?
+            '?prefix=' + prefix :
+            '?';
         return lib.call(params);
     };
 

@@ -56,7 +56,7 @@ module.exports = function(source) {
         removeEmptyAttributes: true,
         keepClosingSlash: true,
     };
-    var minimizeOpts = this.query.match(/&?minimizeOptions[\s\n]*=[\s\n]*([^&]*)/);
+    var minimizeOpts;
     var moduleId = 'ng';
     var result = [];
     var scripts;
@@ -67,18 +67,27 @@ module.exports = function(source) {
         this.cacheable();
     }
 
-    // Remove minimizeOptions from query string because JSON is not suitable for query parameter
-    if (minimizeOpts) {
-        this.query = this.query.replace(minimizeOpts[0], '');
-    }
-    try {
-        minimizeOpts = minimizeOpts && JSON.parse(minimizeOpts[1]);
-    } catch (e) {
-        throw new Error('Invalid value of query parameter minimizeOptions');
+    // webpack1 or webpack2 with legacy query format
+    if (typeof this.query === 'string') {
+        // minimizeOpts is JSON inside query string
+        minimizeOpts = this.query.match(/&?minimizeOptions[\s\n]*=[\s\n]*([^&]*)/);
+
+        if (minimizeOpts) {
+            this.query = this.query.replace(minimizeOpts[0], '');
+        }
+
+        try {
+            minimizeOpts = minimizeOpts && JSON.parse(minimizeOpts[1]);
+        } catch (e) {
+            throw new Error('Invalid value of query parameter minimizeOptions');
+        }
     }
 
     // Parse query and append minimize options
-    extend(opts, minimizeOpts, loaderUtils.parseQuery(this.query));
+    var options = loaderUtils.getOptions ?
+        loaderUtils.getOptions(this) :
+        loaderUtils.parseQuery(this.query);
+    extend(opts, minimizeOpts, options);
 
     if (opts.minimize) {
         try {

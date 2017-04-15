@@ -1,6 +1,6 @@
 {
   "name": "ng-cache-loader",
-  "version": "0.0.23",
+  "version": "0.0.24",
   "description": "Puts HTML partials in the Angular's $templateCache.",
   "main": "index.js",
   "scripts": {
@@ -24,13 +24,13 @@
     "eslint": "^2.13.1",
     "eslint-config-google": "^0.6.0",
     "mocha": "^2.3.0",
-    "webpack": "^1.4.3"
+    "webpack": "^2.4.1"
   },
   "dependencies": {
     "extend": "^3.0.0",
     "fastparse": "^1.0.0",
     "html-minifier": "^3.0.2",
-    "loader-utils": "^0.2.4"
+    "loader-utils": "^1.1.0"
   },
   "directories": {
     "test": "test"
