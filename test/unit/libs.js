@@ -479,4 +479,27 @@ describe(libPath, function() {
             });
         });
     });
+
+    describe('test root prefix', function() {
+        var resources = [
+            '/Users/myself/Projects/packman/web_modules/angular-ui-bootstrap/partials/foo/foo.html',
+            '/Users/myself/Projects/packman/web_modules/angular-ui-bootstrap/partials/template.html',
+            'W:\\Projects\\packman\\web_modules\\angular-ui-bootstrap\\partials\\another_template.html',
+        ];
+        it('#should not have leading slash template in subfolder of root folder', function() {
+            expect(run(resources[0], 'partials:**')).to.equal('foo/foo.html');
+        });
+
+        it('#should not have leading slash for template in root folder', function() {
+            resources.forEach(function(res) {
+                expect(run(resources[1], 'partials:**')).to.equal('template.html');
+            });
+        });
+
+        it('#[win] should not have leading slash for template in root folder', function() {
+            resources.forEach(function(res) {
+                expect(run(resources[2], 'partials:**')).to.equal('another_template.html');
+            });
+        });
+    });
 });
