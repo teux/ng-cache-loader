@@ -24,6 +24,10 @@ module.exports = {
                 loader: '../index.js?prefix=grot/[dir]//[dir]//tmpl&module=appModule&name=[name].tpl&-exportId' +
                     '&minimizeOptions=' + minimizeOptions + '&conservativeCollapse',
             },
+            {
+                test: /\.(png|bmp|raw|jpg|jpeg|tiff|gif|svg)$/,
+                loader: 'url-loader?limit=10240',
+            },
         ],
     },
 };

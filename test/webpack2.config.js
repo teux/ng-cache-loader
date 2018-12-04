@@ -28,6 +28,14 @@ module.exports = {
                     },
                 },
             }],
+        },{
+            test: /\.(png|bmp|raw|jpg|jpeg|tiff|gif|svg)$/,
+            use: [{
+                loader: 'url-loader',
+                options: {
+                    limit: 10240,
+                }
+            }]
         }],
     },
 };
