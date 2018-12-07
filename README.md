@@ -4,7 +4,7 @@ Puts HTML partials in the Angular's $templateCache so directives can use templat
 
 ## Webpack and loaders
 
-Webpack is the [webpack](http://webpack.github.io/) and it's module bundler. [Loaders](http://webpack.github.io/docs/using-loaders.html) wrap content in the javascript code that executes in the browser. 
+Webpack is the [webpack](http://webpack.github.io/) and it's module bundler. [Loaders](http://webpack.github.io/docs/using-loaders.html) wrap content in the javascript code that executes in the browser.
 
 # Install
 
@@ -21,7 +21,7 @@ require('ng-cache!./demo/template/myPartial.html');
 Partial will be available as `ng-include="'myPartial.html'"`
 or `templateUrl: 'myPartial.html'`.
 
-Note that the inline require syntax is used in examples for simplicity. 
+Note that the inline require syntax is used in examples for simplicity.
 It's recommended to use webpack [config](#webpack-config).
 
 ## Named templates
@@ -81,21 +81,21 @@ or retrieve the real directory name (use `*` or `[dir]`):
 
 ``` javascript
 require('ng-cache?prefix=public/*/templates!./path/to/myPartial.html')
-// => ng-include="'public/path/templates/myPartial.html'" 
+// => ng-include="'public/path/templates/myPartial.html'"
 ```
 
 Prefix can strip the real directory name (use `//`):
 
 ``` javascript
 require('ng-cache?prefix=public/*//*/templates!./far/far/away/path/to/myPartial.html')
-// => ng-include="'public/far/path/templates/myPartial.html'" 
+// => ng-include="'public/far/path/templates/myPartial.html'"
 ```
 
 Prefix can be extended through a directory tree (use `**` or `[dirs]`). See the next section.
 
 ## Root
 
-You can specify root directory for templates separated by a colon `prefix=root:**`. 
+You can specify root directory for templates separated by a colon `prefix=root:**`.
 It is enough to specify a single directory name. Prefix counts real template path from right to left and takes first (rightmost) occurance of the root directory.
 
 ```
@@ -121,19 +121,19 @@ It is also possible to combine wildcards in prefix, i.e. `prefix=packman:**/tmpl
 Use `name` query parameter to strip file extension or add suffix:
 
 ``` javascript
-// 
+//
 require('ng-cache?name=[name].tpl!./field.html')
 // => ng-include="'field.tpl'"
 
 require('ng-cache?name=[name]-foo.[ext]!./field.html')
 // => ng-include="'field-foo.html'"
 ```
- 
+
 Note. File extension are defined as any char sequence after the last `.`.
 
 ## Module
 
-By default, templates will be added to the default AngularJS 'ng' module run() method. 
+By default, templates will be added to the default AngularJS 'ng' module run() method.
 Use this parameter to use a different module name:
 
 ``` javascript
@@ -151,13 +151,13 @@ require('ng-cache?module=moduleName.[root]&prefix=packs:**!./packs/path/to/myPar
 In such query `[root]` means that first part of `templateId` *(here it is `path/to/myPartial.html`)* will be stripped out and placed as a part of `moduleId`.
 
 In current example resulting values:
-- `moduleId`: `"moduleName.path"` 
-- `templateId`: `"to/myPartial.html"` 
+- `moduleId`: `"moduleName.path"`
+- `templateId`: `"to/myPartial.html"`
 
 Useful in case you want save few bytes.
 
 ## Template id
- 
+
 To obtain template id use `exportIdOnly` query parameter. Loader exports `id` of a template.
 
 ```javascript
@@ -191,7 +191,7 @@ module: {
 }
 ```
 
-Note that the inline require syntax is used in examples for simplicity. It's recommended to use webpack config. 
+Note that the inline require syntax is used in examples for simplicity. It's recommended to use webpack config.
 Please see this [comment](https://github.com/webpack/webpack/issues/1626#issuecomment-156758230)
 and the [manual](https://webpack.github.io/docs/using-loaders.html#loaders-in-require).
 
@@ -271,6 +271,8 @@ To switch off url resolving use `-url` query param:
 ``` javascript
 require('ng-cache?-url!./myPartial.html')
 ```
+
+Supported attributes: `src`, `srcset`, `md-svg-src`.
 
 # License
 
